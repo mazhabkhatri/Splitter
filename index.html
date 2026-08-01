@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SplitMate - Expense Splitter</title>
+
+
+<link rel="stylesheet" href="style.css">
+
+
+<!-- Modern Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+
+</head>
+
+
+<body>
+
+
+<div id="app">
+
+
+
+<!-- =================================
+HOME SCREEN
+================================= -->
+
+<section id="homeScreen" class="screen">
+
+
+
+<header class="app-header">
+
+
+<div class="brand">
+
+
+<div class="brand-icon">
+
+<i data-lucide="wallet"></i>
+
+</div>
+
+
+<div>
+
+<h1>
+SplitMate
+</h1>
+
+<p>
+Expense Manager
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+
+
+<main class="home-content">
+
+
+
+
+
+<div class="hero-card">
+
+
+
+<div class="hero-icon">
+
+<i data-lucide="receipt"></i>
+
+</div>
+
+
+
+
+<h2>
+Split expenses.
+Stay organized.
+</h2>
+
+
+
+<p>
+Track trips, manage payments and settle balances easily with friends.
+</p>
+
+
+
+
+
+<button 
+id="newTripBtn"
+class="primary-btn">
+
+
+<i data-lucide="plus-circle"></i>
+
+Create New Trip
+
+
+</button>
+
+
+
+
+
+
+<button 
+id="savedTripsBtn"
+class="secondary-btn">
+
+
+<i data-lucide="folder-open"></i>
+
+Saved Trips
+
+
+</button>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- Feature Cards -->
+
+
+<div class="feature-grid">
+
+
+
+<div class="feature-card">
+
+
+<div class="feature-icon blue">
+
+<i data-lucide="users"></i>
+
+</div>
+
+
+<h3>
+Members
+</h3>
+
+
+<p>
+Add friends and participants.
+</p>
+
+
+</div>
+
+
+
+
+
+
+<div class="feature-card">
+
+
+<div class="feature-icon green">
+
+<i data-lucide="credit-card"></i>
+
+</div>
+
+
+<h3>
+Expenses
+</h3>
+
+
+<p>
+Record every payment.
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="feature-card">
+
+
+<div class="feature-icon orange">
+
+<i data-lucide="handshake"></i>
+
+</div>
+
+
+<h3>
+Settlement
+</h3>
+
+
+<p>
+Split money easily.
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+</main>
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<!-- =================================
+CREATE TRIP SCREEN
+================================= -->
+
+
+<section id="tripScreen" class="screen hidden">
+
+
+
+
+
+<header class="page-header">
+
+
+<button class="icon-btn"
+onclick="goHome()">
+
+
+<i data-lucide="arrow-left"></i>
+
+
+</button>
+
+
+
+
+<div>
+
+<h2>
+Create Trip
+</h2>
+
+<p>
+Add your trip details
+</p>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+
+
+
+
+<div class="form-wrapper">
+
+
+
+<div class="form-card">
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+Trip Name
+</label>
+
+
+<div class="input-box">
+
+
+<i data-lucide="map-pin"></i>
+
+
+<input 
+id="tripName"
+type="text"
+placeholder="Example: Goa Trip">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+Description
+</label>
+
+
+<textarea
+id="tripDescription"
+placeholder="Add trip details">
+</textarea>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+Trip Date
+</label>
+
+
+<div class="input-box">
+
+
+<i data-lucide="calendar"></i>
+
+
+<input
+id="tripDate"
+type="date">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<button
+id="createTripBtn"
+class="primary-btn">
+
+
+<i data-lucide="sparkles"></i>
+
+
+Create Trip
+
+
+</button>
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+</section>
+<!-- =================================
+DASHBOARD SCREEN
+================================= -->
+
+
+<section id="dashboardScreen" class="screen hidden">
+
+
+
+
+
+<!-- APP HEADER -->
+
+<header class="dashboard-header">
+
+
+
+<div class="dashboard-brand">
+
+
+<div class="brand-icon small">
+
+<i data-lucide="wallet"></i>
+
+</div>
+
+
+
+<div>
+
+<h2 id="dashboardTitle">
+Trip Dashboard
+</h2>
+
+
+<p id="dashboardSubtitle">
+Manage your expenses
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<button class="icon-btn"
+id="dashboardMenuBtn">
+
+
+<i data-lucide="menu"></i>
+
+
+</button>
+
+
+
+</header>
+
+
+
+
+
+
+
+
+
+<!-- =================================
+STAT CARDS
+================================= -->
+
+
+<div class="stats-container">
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="stat-icon blue">
+
+<i data-lucide="users"></i>
+
+</div>
+
+
+
+<div>
+
+<span>
+Members
+</span>
+
+
+<h3 id="totalMembers">
+0
+</h3>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="stat-icon green">
+
+<i data-lucide="wallet"></i>
+
+</div>
+
+
+
+<div>
+
+<span>
+Total Expense
+</span>
+
+
+<h3 id="totalExpense">
+₹0
+</h3>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="stat-icon purple">
+
+<i data-lucide="chart-no-axes-column"></i>
+
+</div>
+
+
+
+<div>
+
+<span>
+Balance
+</span>
+
+
+<h3 id="totalBalance">
+₹0
+</h3>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<!-- =================================
+TAB NAVIGATION
+================================= -->
+
+
+<nav class="dashboard-tabs">
+
+
+
+<button
+id="membersTab"
+class="tab-btn active">
+
+
+<i data-lucide="users"></i>
+
+Members
+
+
+</button>
+
+
+
+
+
+
+<button
+id="expensesTab"
+class="tab-btn">
+
+
+<i data-lucide="receipt"></i>
+
+Expenses
+
+
+</button>
+
+
+
+
+
+
+
+<button
+id="summaryTab"
+class="tab-btn">
+
+
+<i data-lucide="chart-pie"></i>
+
+Summary
+
+
+</button>
+
+
+
+
+
+
+
+<button
+id="settlementTab"
+class="tab-btn">
+
+
+<i data-lucide="handshake"></i>
+
+Settlement
+
+
+</button>
+
+
+
+</nav>
+
+
+
+
+
+
+
+
+
+<!-- =================================
+MEMBERS SECTION
+================================= -->
+
+
+<div 
+id="membersSection"
+class="dashboard-section">
+
+
+
+
+
+<div class="section-title">
+
+
+<div>
+
+
+<h3>
+Trip Members
+</h3>
+
+
+<p>
+Manage participants
+</p>
+
+
+</div>
+
+
+
+
+<span id="memberCount">
+
+0 Members
+
+</span>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ADD MEMBER -->
+
+
+<div class="add-box">
+
+
+
+<div class="input-box">
+
+
+<i data-lucide="user-plus"></i>
+
+
+<input
+id="memberName"
+type="text"
+placeholder="Enter member name">
+
+
+</div>
+
+
+
+
+<button
+id="addMemberBtn"
+class="primary-small-btn">
+
+
+<i data-lucide="plus"></i>
+
+
+Add
+
+
+</button>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- MEMBER LIST -->
+
+
+
+<div 
+id="memberList"
+class="member-list">
+
+
+
+<!-- JavaScript will insert members here -->
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+<!-- =================================
+EXPENSES SECTION
+================================= -->
+
+
+<div 
+id="expensesSection"
+class="dashboard-section hidden">
+
+
+
+
+
+
+
+<div class="section-title">
+
+
+
+<div>
+
+
+<h3>
+Expenses
+</h3>
+
+
+<p>
+Track every payment
+</p>
+
+
+</div>
+
+
+
+
+
+
+<button
+id="addExpenseBtn"
+class="primary-small-btn">
+
+
+<i data-lucide="plus"></i>
+
+
+Add
+
+
+</button>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- EXPENSE OVERVIEW -->
+
+
+<div class="expense-overview">
+
+
+
+
+
+<div class="overview-card">
+
+
+<div class="stat-icon green">
+
+<i data-lucide="indian-rupee"></i>
+
+</div>
+
+
+
+<div>
+
+
+<span>
+Total Spent
+</span>
+
+
+<h3 id="expenseTotal">
+₹0
+</h3>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="overview-card">
+
+
+<div class="stat-icon blue">
+
+<i data-lucide="receipt"></i>
+
+</div>
+
+
+
+<div>
+
+
+<span>
+Expenses
+</span>
+
+
+<h3 id="expenseCount">
+0
+</h3>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =================================
+ADD EXPENSE FORM
+================================= -->
+
+
+<div 
+id="expenseForm"
+class="expense-form hidden">
+
+
+
+
+
+<div class="form-header">
+
+
+<div>
+
+<h3>
+New Expense
+</h3>
+
+
+<p>
+Add payment details
+</p>
+
+
+</div>
+
+
+
+
+<button
+id="closeExpenseFormBtn"
+class="icon-btn">
+
+
+<i data-lucide="x"></i>
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+Expense Title
+</label>
+
+
+<div class="input-box">
+
+
+<i data-lucide="file-text"></i>
+
+
+<input
+id="expenseTitle"
+type="text"
+placeholder="Example: Hotel booking">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+Amount
+</label>
+
+
+<div class="input-box">
+
+
+<i data-lucide="indian-rupee"></i>
+
+
+<input
+id="expenseAmount"
+type="number"
+placeholder="Enter amount">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+Paid By
+</label>
+
+
+
+<div class="input-box">
+
+
+<i data-lucide="user"></i>
+
+
+
+<select id="expensePaidBy">
+
+
+<option value="">
+Select member
+</option>
+
+
+</select>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+Category
+</label>
+
+
+<div class="category-grid">
+
+
+
+
+
+<button 
+class="category-btn active"
+data-category="Food">
+
+
+<i data-lucide="utensils"></i>
+
+
+Food
+
+
+</button>
+
+
+
+
+
+
+<button 
+class="category-btn"
+data-category="Travel">
+
+
+<i data-lucide="car"></i>
+
+
+Travel
+
+
+</button>
+
+
+
+
+
+
+
+<button 
+class="category-btn"
+data-category="Stay">
+
+
+<i data-lucide="hotel"></i>
+
+
+Stay
+
+
+</button>
+
+
+
+
+
+
+
+<button 
+class="category-btn"
+data-category="Other">
+
+
+<i data-lucide="package"></i>
+
+
+Other
+
+
+</button>
+
+
+
+
+
+
+</div>
+
+
+<input 
+type="hidden"
+id="expenseCategory"
+value="Food">
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+Date
+</label>
+
+
+
+<div class="input-box">
+
+
+<i data-lucide="calendar-days"></i>
+
+
+<input
+id="expenseDate"
+type="date">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+Note
+</label>
+
+
+<textarea
+id="expenseDescription"
+placeholder="Optional note">
+</textarea>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-actions">
+
+
+<button
+id="saveExpenseBtn"
+class="primary-btn">
+
+
+<i data-lucide="check"></i>
+
+
+Save Expense
+
+
+</button>
+
+
+
+
+
+<button
+id="cancelExpenseBtn"
+class="secondary-btn">
+
+
+Cancel
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- =================================
+EXPENSE LIST
+================================= -->
+
+
+<div
+id="expenseList"
+class="expense-list">
+
+
+
+
+
+<div class="empty-state">
+
+
+<div class="empty-icon">
+
+<i data-lucide="receipt"></i>
+
+</div>
+
+
+
+<h3>
+No Expenses Yet
+</h3>
+
+
+<p>
+Your expenses will appear here.
+</p>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+<!-- =================================
+SUMMARY SECTION
+================================= -->
+
+
+<div 
+id="summarySection"
+class="dashboard-section hidden">
+
+
+
+
+
+<div class="section-title">
+
+
+<div>
+
+
+<h3>
+Summary
+</h3>
+
+
+<p>
+Expense analysis
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="summary-grid">
+
+
+
+
+
+<div class="summary-card">
+
+
+<div class="stat-icon green">
+
+<i data-lucide="wallet"></i>
+
+</div>
+
+
+
+<div>
+
+
+<span>
+Total Expense
+</span>
+
+
+<h2 id="summaryTotalExpense">
+₹0
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="summary-card">
+
+
+<div class="stat-icon blue">
+
+<i data-lucide="calculator"></i>
+
+</div>
+
+
+
+<div>
+
+
+<span>
+Average
+</span>
+
+
+<h2 id="averageExpense">
+₹0
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="summary-card">
+
+
+<div class="stat-icon purple">
+
+<i data-lucide="trending-up"></i>
+
+</div>
+
+
+
+<div>
+
+
+<span>
+Highest Expense
+</span>
+
+
+<h2 id="highestExpense">
+₹0
+</h2>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="member-summary-card">
+
+
+<h3>
+Member Balances
+</h3>
+
+
+<div id="memberSummaryList">
+
+
+<!-- JS will add balances -->
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =================================
+SETTLEMENT SECTION
+================================= -->
+
+
+<div 
+id="settlementSection"
+class="dashboard-section hidden">
+
+
+
+
+
+<div class="section-title">
+
+
+<div>
+
+
+<h3>
+Settlement
+</h3>
+
+
+<p>
+Who pays whom
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div
+id="settlementList">
+
+
+
+
+
+<div class="empty-state">
+
+
+<div class="empty-icon">
+
+<i data-lucide="handshake"></i>
+
+</div>
+
+
+
+<h3>
+All Settled
+</h3>
+
+
+<p>
+Payments will appear here.
+</p>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =================================
+SAVED TRIPS MODAL
+================================= -->
+
+
+<div
+id="savedTripsModal"
+class="modal hidden">
+
+
+
+
+
+<div class="modal-card">
+
+
+
+
+
+<div class="modal-header">
+
+
+<div>
+
+
+<h2>
+Saved Trips
+</h2>
+
+
+<p>
+Your previous trips
+</p>
+
+
+</div>
+
+
+
+
+<button
+id="closeSavedTripsBtn"
+class="icon-btn">
+
+
+<i data-lucide="x"></i>
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div
+id="savedTripsList">
+
+
+<div class="empty-state">
+
+
+<div class="empty-icon">
+
+<i data-lucide="folder-open"></i>
+
+</div>
+
+
+
+<h3>
+No Saved Trips
+</h3>
+
+
+<p>
+Create trips to save them here.
+</p>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- =================================
+DELETE CONFIRM MODAL
+================================= -->
+
+
+<div
+id="confirmModal"
+class="modal hidden">
+
+
+
+
+
+<div class="modal-card small">
+
+
+
+
+
+<div class="modal-icon danger">
+
+
+<i data-lucide="trash-2"></i>
+
+
+</div>
+
+
+
+
+<h2>
+Delete Trip?
+</h2>
+
+
+
+<p>
+This action cannot be undone.
+</p>
+
+
+
+
+
+
+
+<div class="modal-actions">
+
+
+
+<button
+id="confirmDeleteBtn"
+class="danger-btn">
+
+
+Delete
+
+
+</button>
+
+
+
+
+
+<button
+id="cancelDeleteBtn"
+class="secondary-btn">
+
+
+Cancel
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+<!-- END APP -->
+
+
+
+
+
+
+
+<script src="script.js"></script>
+
+
+<script>
+
+lucide.createIcons();
+
+</script>
+
+
+
+</body>
+
+
+</html>
