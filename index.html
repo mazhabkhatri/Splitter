@@ -1,1964 +1,572 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="light">
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>SplitMate - Expense Splitter</title>
-
-
-<link rel="stylesheet" href="style.css">
-
-
-<!-- Modern Icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
-
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Splitter - Expense Splitter</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
-
 <body>
 
-
-<div id="app">
-
-
-
-<!-- =================================
-HOME SCREEN
-================================= -->
-
-<section id="homeScreen" class="screen">
-
-
-
-<header class="app-header">
-
-
-<div class="brand">
-
-
-<div class="brand-icon">
-
-<i data-lucide="wallet"></i>
-
-</div>
-
-
-<div>
-
-<h1>
-SplitMate
-</h1>
-
-<p>
-Expense Manager
-</p>
-
-
-</div>
-
-
-</div>
-
-
-</header>
-
-
-
-
-
-
-
-<main class="home-content">
-
-
-
-
-
-<div class="hero-card">
-
-
-
-<div class="hero-icon">
-
-<i data-lucide="receipt"></i>
-
-</div>
-
-
-
-
-<h2>
-Split expenses.
-Stay organized.
-</h2>
-
-
-
-<p>
-Track trips, manage payments and settle balances easily with friends.
-</p>
-
-
-
-
-
-<button 
-id="newTripBtn"
-class="primary-btn">
-
-
-<i data-lucide="plus-circle"></i>
-
-Create New Trip
-
-
-</button>
-
-
-
-
-
-
-<button 
-id="savedTripsBtn"
-class="secondary-btn">
-
-
-<i data-lucide="folder-open"></i>
-
-Saved Trips
-
-
-</button>
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-<!-- Feature Cards -->
-
-
-<div class="feature-grid">
-
-
-
-<div class="feature-card">
-
-
-<div class="feature-icon blue">
-
-<i data-lucide="users"></i>
-
-</div>
-
-
-<h3>
-Members
-</h3>
-
-
-<p>
-Add friends and participants.
-</p>
-
-
-</div>
-
-
-
-
-
-
-<div class="feature-card">
-
-
-<div class="feature-icon green">
-
-<i data-lucide="credit-card"></i>
-
-</div>
-
-
-<h3>
-Expenses
-</h3>
-
-
-<p>
-Record every payment.
-</p>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="feature-card">
-
-
-<div class="feature-icon orange">
-
-<i data-lucide="handshake"></i>
-
-</div>
-
-
-<h3>
-Settlement
-</h3>
-
-
-<p>
-Split money easily.
-</p>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-</main>
-
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-
-
-<!-- =================================
-CREATE TRIP SCREEN
-================================= -->
-
-
-<section id="tripScreen" class="screen hidden">
-
-
-
-
-
-<header class="page-header">
-
-
-<button class="icon-btn"
-onclick="goHome()">
-
-
-<i data-lucide="arrow-left"></i>
-
-
-</button>
-
-
-
-
-<div>
-
-<h2>
-Create Trip
-</h2>
-
-<p>
-Add your trip details
-</p>
-
-
-</div>
-
-
-</header>
-
-
-
-
-
-
-
-
-
-<div class="form-wrapper">
-
-
-
-<div class="form-card">
-
-
-
-
-
-<div class="input-group">
-
-
-<label>
-Trip Name
-</label>
-
-
-<div class="input-box">
-
-
-<i data-lucide="map-pin"></i>
-
-
-<input 
-id="tripName"
-type="text"
-placeholder="Example: Goa Trip">
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-<div class="input-group">
-
-
-<label>
-Description
-</label>
-
-
-<textarea
-id="tripDescription"
-placeholder="Add trip details">
-</textarea>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="input-group">
-
-
-<label>
-Trip Date
-</label>
-
-
-<div class="input-box">
-
-
-<i data-lucide="calendar"></i>
-
-
-<input
-id="tripDate"
-type="date">
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-<button
-id="createTripBtn"
-class="primary-btn">
-
-
-<i data-lucide="sparkles"></i>
-
-
-Create Trip
-
-
-</button>
-
-
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-</section>
-<!-- =================================
-DASHBOARD SCREEN
-================================= -->
-
-
-<section id="dashboardScreen" class="screen hidden">
-
-
-
-
-
-<!-- APP HEADER -->
-
-<header class="dashboard-header">
-
-
-
-<div class="dashboard-brand">
-
-
-<div class="brand-icon small">
-
-<i data-lucide="wallet"></i>
-
-</div>
-
-
-
-<div>
-
-<h2 id="dashboardTitle">
-Trip Dashboard
-</h2>
-
-
-<p id="dashboardSubtitle">
-Manage your expenses
-</p>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-<button class="icon-btn"
-id="dashboardMenuBtn">
-
-
-<i data-lucide="menu"></i>
-
-
-</button>
-
-
-
-</header>
-
-
-
-
-
-
-
-
-
-<!-- =================================
-STAT CARDS
-================================= -->
-
-
-<div class="stats-container">
-
-
-
-
-
-<div class="stat-card">
-
-
-<div class="stat-icon blue">
-
-<i data-lucide="users"></i>
-
-</div>
-
-
-
-<div>
-
-<span>
-Members
-</span>
-
-
-<h3 id="totalMembers">
-0
-</h3>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-
-
-<div class="stat-card">
-
-
-<div class="stat-icon green">
-
-<i data-lucide="wallet"></i>
-
-</div>
-
-
-
-<div>
-
-<span>
-Total Expense
-</span>
-
-
-<h3 id="totalExpense">
-₹0
-</h3>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-
-
-<div class="stat-card">
-
-
-<div class="stat-icon purple">
-
-<i data-lucide="chart-no-axes-column"></i>
-
-</div>
-
-
-
-<div>
-
-<span>
-Balance
-</span>
-
-
-<h3 id="totalBalance">
-₹0
-</h3>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-<!-- =================================
-TAB NAVIGATION
-================================= -->
-
-
-<nav class="dashboard-tabs">
-
-
-
-<button
-id="membersTab"
-class="tab-btn active">
-
-
-<i data-lucide="users"></i>
-
-Members
-
-
-</button>
-
-
-
-
-
-
-<button
-id="expensesTab"
-class="tab-btn">
-
-
-<i data-lucide="receipt"></i>
-
-Expenses
-
-
-</button>
-
-
-
-
-
-
-
-<button
-id="summaryTab"
-class="tab-btn">
-
-
-<i data-lucide="chart-pie"></i>
-
-Summary
-
-
-</button>
-
-
-
-
-
-
-
-<button
-id="settlementTab"
-class="tab-btn">
-
-
-<i data-lucide="handshake"></i>
-
-Settlement
-
-
-</button>
-
-
-
-</nav>
-
-
-
-
-
-
-
-
-
-<!-- =================================
-MEMBERS SECTION
-================================= -->
-
-
-<div 
-id="membersSection"
-class="dashboard-section">
-
-
-
-
-
-<div class="section-title">
-
-
-<div>
-
-
-<h3>
-Trip Members
-</h3>
-
-
-<p>
-Manage participants
-</p>
-
-
-</div>
-
-
-
-
-<span id="memberCount">
-
-0 Members
-
-</span>
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<!-- ADD MEMBER -->
-
-
-<div class="add-box">
-
-
-
-<div class="input-box">
-
-
-<i data-lucide="user-plus"></i>
-
-
-<input
-id="memberName"
-type="text"
-placeholder="Enter member name">
-
-
-</div>
-
-
-
-
-<button
-id="addMemberBtn"
-class="primary-small-btn">
-
-
-<i data-lucide="plus"></i>
-
-
-Add
-
-
-</button>
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<!-- MEMBER LIST -->
-
-
-
-<div 
-id="memberList"
-class="member-list">
-
-
-
-<!-- JavaScript will insert members here -->
-
-
-</div>
-
-
-
-
-
-
-
-</div>
-<!-- =================================
-EXPENSES SECTION
-================================= -->
-
-
-<div 
-id="expensesSection"
-class="dashboard-section hidden">
-
-
-
-
-
-
-
-<div class="section-title">
-
-
-
-<div>
-
-
-<h3>
-Expenses
-</h3>
-
-
-<p>
-Track every payment
-</p>
-
-
-</div>
-
-
-
-
-
-
-<button
-id="addExpenseBtn"
-class="primary-small-btn">
-
-
-<i data-lucide="plus"></i>
-
-
-Add
-
-
-</button>
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<!-- EXPENSE OVERVIEW -->
-
-
-<div class="expense-overview">
-
-
-
-
-
-<div class="overview-card">
-
-
-<div class="stat-icon green">
-
-<i data-lucide="indian-rupee"></i>
-
-</div>
-
-
-
-<div>
-
-
-<span>
-Total Spent
-</span>
-
-
-<h3 id="expenseTotal">
-₹0
-</h3>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-<div class="overview-card">
-
-
-<div class="stat-icon blue">
-
-<i data-lucide="receipt"></i>
-
-</div>
-
-
-
-<div>
-
-
-<span>
-Expenses
-</span>
-
-
-<h3 id="expenseCount">
-0
-</h3>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<!-- =================================
-ADD EXPENSE FORM
-================================= -->
-
-
-<div 
-id="expenseForm"
-class="expense-form hidden">
-
-
-
-
-
-<div class="form-header">
-
-
-<div>
-
-<h3>
-New Expense
-</h3>
-
-
-<p>
-Add payment details
-</p>
-
-
-</div>
-
-
-
-
-<button
-id="closeExpenseFormBtn"
-class="icon-btn">
-
-
-<i data-lucide="x"></i>
-
-
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="input-group">
-
-
-<label>
-Expense Title
-</label>
-
-
-<div class="input-box">
-
-
-<i data-lucide="file-text"></i>
-
-
-<input
-id="expenseTitle"
-type="text"
-placeholder="Example: Hotel booking">
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="input-group">
-
-
-<label>
-Amount
-</label>
-
-
-<div class="input-box">
-
-
-<i data-lucide="indian-rupee"></i>
-
-
-<input
-id="expenseAmount"
-type="number"
-placeholder="Enter amount">
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="input-group">
-
-
-<label>
-Paid By
-</label>
-
-
-
-<div class="input-box">
-
-
-<i data-lucide="user"></i>
-
-
-
-<select id="expensePaidBy">
-
-
-<option value="">
-Select member
-</option>
-
-
-</select>
-
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="input-group">
-
-
-<label>
-Category
-</label>
-
-
-<div class="category-grid">
-
-
-
-
-
-<button 
-class="category-btn active"
-data-category="Food">
-
-
-<i data-lucide="utensils"></i>
-
-
-Food
-
-
-</button>
-
-
-
-
-
-
-<button 
-class="category-btn"
-data-category="Travel">
-
-
-<i data-lucide="car"></i>
-
-
-Travel
-
-
-</button>
-
-
-
-
-
-
-
-<button 
-class="category-btn"
-data-category="Stay">
-
-
-<i data-lucide="hotel"></i>
-
-
-Stay
-
-
-</button>
-
-
-
-
-
-
-
-<button 
-class="category-btn"
-data-category="Other">
-
-
-<i data-lucide="package"></i>
-
-
-Other
-
-
-</button>
-
-
-
-
-
-
-</div>
-
-
-<input 
-type="hidden"
-id="expenseCategory"
-value="Food">
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="input-group">
-
-
-<label>
-Date
-</label>
-
-
-
-<div class="input-box">
-
-
-<i data-lucide="calendar-days"></i>
-
-
-<input
-id="expenseDate"
-type="date">
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="input-group">
-
-
-<label>
-Note
-</label>
-
-
-<textarea
-id="expenseDescription"
-placeholder="Optional note">
-</textarea>
-
-
-</div>
-
-
-
-
-
-
-
-
-<div class="form-actions">
-
-
-<button
-id="saveExpenseBtn"
-class="primary-btn">
-
-
-<i data-lucide="check"></i>
-
-
-Save Expense
-
-
-</button>
-
-
-
-
-
-<button
-id="cancelExpenseBtn"
-class="secondary-btn">
-
-
-Cancel
-
-
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<!-- =================================
-EXPENSE LIST
-================================= -->
-
-
-<div
-id="expenseList"
-class="expense-list">
-
-
-
-
-
-<div class="empty-state">
-
-
-<div class="empty-icon">
-
-<i data-lucide="receipt"></i>
-
-</div>
-
-
-
-<h3>
-No Expenses Yet
-</h3>
-
-
-<p>
-Your expenses will appear here.
-</p>
-
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-
-
-</div>
-<!-- =================================
-SUMMARY SECTION
-================================= -->
-
-
-<div 
-id="summarySection"
-class="dashboard-section hidden">
-
-
-
-
-
-<div class="section-title">
-
-
-<div>
-
-
-<h3>
-Summary
-</h3>
-
-
-<p>
-Expense analysis
-</p>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="summary-grid">
-
-
-
-
-
-<div class="summary-card">
-
-
-<div class="stat-icon green">
-
-<i data-lucide="wallet"></i>
-
-</div>
-
-
-
-<div>
-
-
-<span>
-Total Expense
-</span>
-
-
-<h2 id="summaryTotalExpense">
-₹0
-</h2>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-<div class="summary-card">
-
-
-<div class="stat-icon blue">
-
-<i data-lucide="calculator"></i>
-
-</div>
-
-
-
-<div>
-
-
-<span>
-Average
-</span>
-
-
-<h2 id="averageExpense">
-₹0
-</h2>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-<div class="summary-card">
-
-
-<div class="stat-icon purple">
-
-<i data-lucide="trending-up"></i>
-
-</div>
-
-
-
-<div>
-
-
-<span>
-Highest Expense
-</span>
-
-
-<h2 id="highestExpense">
-₹0
-</h2>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div class="member-summary-card">
-
-
-<h3>
-Member Balances
-</h3>
-
-
-<div id="memberSummaryList">
-
-
-<!-- JS will add balances -->
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- =================================
-SETTLEMENT SECTION
-================================= -->
-
-
-<div 
-id="settlementSection"
-class="dashboard-section hidden">
-
-
-
-
-
-<div class="section-title">
-
-
-<div>
-
-
-<h3>
-Settlement
-</h3>
-
-
-<p>
-Who pays whom
-</p>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-
-<div
-id="settlementList">
-
-
-
-
-
-<div class="empty-state">
-
-
-<div class="empty-icon">
-
-<i data-lucide="handshake"></i>
-
-</div>
-
-
-
-<h3>
-All Settled
-</h3>
-
-
-<p>
-Payments will appear here.
-</p>
-
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- =================================
-SAVED TRIPS MODAL
-================================= -->
-
-
-<div
-id="savedTripsModal"
-class="modal hidden">
-
-
-
-
-
-<div class="modal-card">
-
-
-
-
-
-<div class="modal-header">
-
-
-<div>
-
-
-<h2>
-Saved Trips
-</h2>
-
-
-<p>
-Your previous trips
-</p>
-
-
-</div>
-
-
-
-
-<button
-id="closeSavedTripsBtn"
-class="icon-btn">
-
-
-<i data-lucide="x"></i>
-
-
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-<div
-id="savedTripsList">
-
-
-<div class="empty-state">
-
-
-<div class="empty-icon">
-
-<i data-lucide="folder-open"></i>
-
-</div>
-
-
-
-<h3>
-No Saved Trips
-</h3>
-
-
-<p>
-Create trips to save them here.
-</p>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- =================================
-DELETE CONFIRM MODAL
-================================= -->
-
-
-<div
-id="confirmModal"
-class="modal hidden">
-
-
-
-
-
-<div class="modal-card small">
-
-
-
-
-
-<div class="modal-icon danger">
-
-
-<i data-lucide="trash-2"></i>
-
-
-</div>
-
-
-
-
-<h2>
-Delete Trip?
-</h2>
-
-
-
-<p>
-This action cannot be undone.
-</p>
-
-
-
-
-
-
-
-<div class="modal-actions">
-
-
-
-<button
-id="confirmDeleteBtn"
-class="danger-btn">
-
-
-Delete
-
-
-</button>
-
-
-
-
-
-<button
-id="cancelDeleteBtn"
-class="secondary-btn">
-
-
-Cancel
-
-
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-</div>
-<!-- END APP -->
-
-
-
-
-
-
-
-<script src="script.js"></script>
-
-
-<script>
-
-lucide.createIcons();
-
-</script>
-
-
-
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand" id="nav-brand">
+        <span class="brand-logo">💸</span>
+        <span class="brand-title">Splitter</span>
+      </div>
+      <nav class="nav-links">
+        <button class="nav-btn active" data-view="home">
+          <span class="nav-icon">🏠</span> <span class="nav-text">Home</span>
+        </button>
+        <button class="nav-btn" data-view="trips">
+          <span class="nav-icon">📂</span> <span class="nav-text">Saved Trips</span>
+        </button>
+        <button class="nav-btn" data-view="stats">
+          <span class="nav-icon">📈</span> <span class="nav-text">Statistics</span>
+        </button>
+        <button class="nav-btn" data-view="settings">
+          <span class="nav-icon">⚙️</span> <span class="nav-text">Settings</span>
+        </button>
+      </nav>
+      <button class="theme-toggle-btn" id="theme-toggle-quick" title="Toggle Theme">
+        <span class="theme-icon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+
+    <!-- ================================================== -->
+    <!-- HOME VIEW -->
+    <!-- ================================================== -->
+    <section id="view-home" class="view active">
+      <div class="hero-card">
+        <div class="hero-badge">Smart & Effortless</div>
+        <h1 class="hero-title">💸 Splitter</h1>
+        <p class="hero-subtitle">Split expenses easily with friends.</p>
+        
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" id="btn-home-new-trip">
+            <span>➕</span> New Trip
+          </button>
+          <button class="btn btn-secondary btn-lg" id="btn-home-saved-trips">
+            <span>📂</span> Saved Trips
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Highlights Summary -->
+      <div class="home-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📂</div>
+          <div class="stat-info">
+            <span class="stat-value" id="home-stat-trips">0</span>
+            <span class="stat-label">Total Trips</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-info">
+            <span class="stat-value" id="home-stat-spent">₹0</span>
+            <span class="stat-label">Total Spent</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <span class="stat-value" id="home-stat-active">0</span>
+            <span class="stat-label">Active Trips</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Trips Preview -->
+      <div class="section-container">
+        <div class="section-header">
+          <h2>Recent Trips</h2>
+          <button class="btn btn-text" id="btn-view-all-trips">View All →</button>
+        </div>
+        <div id="home-recent-trips" class="trips-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- SAVED TRIPS VIEW -->
+    <!-- ================================================== -->
+    <section id="view-trips" class="view">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">📂 Saved Trips</h1>
+          <p class="view-subtitle">Manage all your active and completed group expenses.</p>
+        </div>
+        <button class="btn btn-primary" id="btn-trips-new-trip">
+          <span>➕</span> New Trip
+        </button>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="filter-bar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="trips-search-input" placeholder="Search trips by name...">
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="active">Active</button>
+          <button class="filter-btn" data-filter="completed">Completed</button>
+        </div>
+      </div>
+
+      <div id="saved-trips-container" class="trips-grid">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- TRIP DASHBOARD VIEW -->
+    <!-- ================================================== -->
+    <section id="view-dashboard" class="view">
+      <!-- Dashboard Top Header -->
+      <div class="dashboard-top">
+        <button class="btn btn-icon-back" id="btn-dashboard-back" title="Back to Saved Trips">
+          ← Back
+        </button>
+        <div class="dashboard-title-area">
+          <h1 id="dashboard-trip-name">📍 Trip Name</h1>
+          <span id="dashboard-trip-badge" class="badge badge-active">Active</span>
+        </div>
+        <div class="dashboard-quick-actions">
+          <button class="btn btn-outline btn-sm" id="btn-dashboard-rename">✏️ Rename</button>
+        </div>
+      </div>
+
+      <!-- Dashboard Nav Tabs -->
+      <div class="dashboard-tabs">
+        <button class="dash-tab active" data-tab="members">
+          <span>👥</span> Members
+        </button>
+        <button class="dash-tab" data-tab="expenses">
+          <span>💰</span> Expenses
+        </button>
+        <button class="dash-tab" data-tab="summary">
+          <span>📊</span> Summary
+        </button>
+        <button class="dash-tab" data-tab="settlement">
+          <span>💸</span> Settlement
+        </button>
+        <button class="dash-tab" data-tab="endtrip">
+          <span>🏁</span> End Trip
+        </button>
+      </div>
+
+      <!-- TAB 1: MEMBERS -->
+      <div id="tab-members" class="tab-content active">
+        <div class="tab-card">
+          <h3>Add New Member</h3>
+          <form id="form-add-member" class="form-row">
+            <input type="text" id="input-member-name" placeholder="Enter member name (e.g. Rahul)" required autocomplete="off">
+            <button type="submit" class="btn btn-primary">➕ Add Member</button>
+          </form>
+        </div>
+
+        <div class="tab-header">
+          <h3>Group Members (<span id="members-count">0</span>)</h3>
+        </div>
+
+        <div id="members-list" class="members-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- TAB 2: EXPENSES -->
+      <div id="tab-expenses" class="tab-content">
+        <div class="tab-header flex-between">
+          <h3>Trip Expenses</h3>
+          <button class="btn btn-primary" id="btn-open-add-expense">
+            <span>➕</span> Add Expense
+          </button>
+        </div>
+
+        <div id="expenses-list" class="expenses-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- TAB 3: SUMMARY -->
+      <div id="tab-summary" class="tab-content">
+        <div class="summary-metrics-grid">
+          <div class="metric-card primary">
+            <span class="metric-label">Total Expense</span>
+            <span class="metric-value" id="summary-total-expense">₹0</span>
+          </div>
+          <div class="metric-card accent">
+            <span class="metric-label">Per Person Share</span>
+            <span class="metric-value" id="summary-per-person">₹0</span>
+          </div>
+        </div>
+
+        <div class="tab-header">
+          <h3>Member Breakdown</h3>
+        </div>
+
+        <div id="summary-members-list" class="summary-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- TAB 4: SETTLEMENT -->
+      <div id="tab-settlement" class="tab-content">
+        <div class="settlement-header-card">
+          <h3>Simplify Debts</h3>
+          <p>Calculated minimum transactions required to settle up all balances efficiently.</p>
+          <div id="settlement-progress-bar-container" class="progress-bar-container">
+            <div id="settlement-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+          <span id="settlement-progress-text" class="progress-text">0 of 0 transactions completed</span>
+        </div>
+
+        <div id="settlement-banner" class="settlement-success-banner hidden">
+          🎉 All transactions completed!
+        </div>
+
+        <div id="settlements-list" class="settlements-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- TAB 5: END TRIP -->
+      <div id="tab-endtrip" class="tab-content">
+        <div class="end-trip-card">
+          <div class="end-trip-icon">🏁</div>
+          <h2>Wrap Up Trip</h2>
+          <p>Marking this trip as completed will finalize all expenses and record it in your archive.</p>
+          <div id="end-trip-status-info"></div>
+          <button class="btn btn-danger btn-lg" id="btn-execute-end-trip">
+            🏁 End & Close Trip
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- STATISTICS VIEW -->
+    <!-- ================================================== -->
+    <section id="view-stats" class="view">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">📈 Overall Statistics</h1>
+          <p class="view-subtitle">Insights and analysis across all your trips.</p>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-overview-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📁</div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-total-trips">0</span>
+            <span class="stat-label">Total Trips</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-completed-trips">0</span>
+            <span class="stat-label">Completed Trips</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-active-trips">0</span>
+            <span class="stat-label">Active Trips</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-total-spent">₹0</span>
+            <span class="stat-label">Total Spent</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-avg-expense">₹0</span>
+            <span class="stat-label">Avg Expense / Trip</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💎</div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-most-expensive">None</span>
+            <span class="stat-label">Most Expensive Trip</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-largest-group">0</span>
+            <span class="stat-label">Largest Group Size</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CSS Visual Chart -->
+      <div class="section-container mt-4">
+        <h2>Trip Spending Comparison</h2>
+        <div class="chart-container" id="spending-chart">
+          <!-- Dynamically populated chart bars -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================== -->
+    <!-- SETTINGS VIEW -->
+    <!-- ================================================== -->
+    <section id="view-settings" class="view">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">⚙️ App Settings</h1>
+          <p class="view-subtitle">Manage preferences, backup data, or clear storage.</p>
+        </div>
+      </div>
+
+      <div class="settings-list">
+        <!-- Dark Mode Toggle -->
+        <div class="settings-card">
+          <div class="settings-info">
+            <h3>🌙 Dark Mode</h3>
+            <p>Switch between dark and light appearance theme.</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-dark-mode">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <!-- Currency Selector -->
+        <div class="settings-card">
+          <div class="settings-info">
+            <h3>💱 Default Currency Symbol</h3>
+            <p>Select symbol used when creating new trips.</p>
+          </div>
+          <select id="setting-currency" class="form-select">
+            <option value="₹">₹ (INR)</option>
+            <option value="$">$ (USD)</option>
+            <option value="€">€ (EUR)</option>
+            <option value="£">£ (GBP)</option>
+            <option value="¥">¥ (JPY)</option>
+            <option value="₩">₩ (KRW)</option>
+            <option value="A$">A$ (AUD)</option>
+          </select>
+        </div>
+
+        <!-- Export Backup -->
+        <div class="settings-card">
+          <div class="settings-info">
+            <h3>📥 Export Backup</h3>
+            <p>Download a JSON backup file containing all your trips and expenses.</p>
+          </div>
+          <button class="btn btn-secondary" id="btn-export-backup">
+            Export JSON
+          </button>
+        </div>
+
+        <!-- Import Backup -->
+        <div class="settings-card">
+          <div class="settings-info">
+            <h3>📤 Import Backup</h3>
+            <p>Restore your data from a previously saved JSON backup file.</p>
+          </div>
+          <label class="btn btn-outline cursor-pointer">
+            Import JSON
+            <input type="file" id="input-import-backup" accept=".json" style="display: none;">
+          </label>
+        </div>
+
+        <!-- Clear All Data -->
+        <div class="settings-card danger-zone">
+          <div class="settings-info">
+            <h3>🗑️ Delete All Trips</h3>
+            <p>Permanently remove all trips, members, and expenses from Local Storage.</p>
+          </div>
+          <button class="btn btn-danger" id="btn-clear-all-data">
+            Clear All Data
+          </button>
+        </div>
+
+        <!-- About App -->
+        <div class="settings-card">
+          <div class="settings-info">
+            <h3>ℹ️ About Splitter</h3>
+            <p>Version 1.0.0 • Clean & Offline Expense Splitter App</p>
+            <p class="text-sm muted">All data is safely stored directly inside your browser's Local Storage.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================================================== -->
+  <!-- MODALS -->
+  <!-- ================================================== -->
+
+  <!-- Modal 1: New Trip -->
+  <div id="modal-new-trip" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>➕ Create New Trip</h2>
+        <button class="modal-close" data-close-modal="modal-new-trip">✕</button>
+      </div>
+      <form id="form-new-trip">
+        <div class="form-group">
+          <label for="input-trip-name">Trip / Event Name</label>
+          <input type="text" id="input-trip-name" placeholder="e.g. Goa Trip, Apartment Rent, Weekend Party" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="input-trip-currency">Currency Symbol</label>
+
+          <select id="input-trip-currency" class="form-select">
+            <option value="₹">₹ (INR)</option>
+            <option value="$">$ (USD)</option>
+            <option value="€">€ (EUR)</option>
+            <option value="£">£ (GBP)</option>
+            <option value="¥">¥ (JPY)</option>
+            <option value="₩">₩ (KRW)</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-text" data-close-modal="modal-new-trip">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Trip</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Add / Edit Expense -->
+  <div id="modal-expense" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-expense-title">💰 Add Expense</h2>
+        <button class="modal-close" data-close-modal="modal-expense">✕</button>
+      </div>
+      <form id="form-expense">
+        <input type="hidden" id="expense-id-hidden">
+        
+        <div class="form-group">
+          <label for="expense-title-input">Expense Title</label>
+          <input type="text" id="expense-title-input" placeholder="e.g. Dinner, Fuel, Hotel" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="expense-amount-input">Amount</label>
+
+          <input type="number" id="expense-amount-input" step="0.01" min="0.01" placeholder="0.00" required autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label for="expense-paidby-select">Paid By</label>
+          <select id="expense-paidby-select" class="form-select" required>
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div class="flex-between mb-1">
+            <label>Split Between</label>
+            <div class="text-sm">
+              <button type="button" class="btn-link" id="btn-select-all-split">Select All</button>
+              •
+              <button type="button" class="btn-link" id="btn-deselect-all-split">Clear</button>
+            </div>
+          </div>
+          <div id="expense-split-checkboxes" class="checkbox-grid">
+            <!-- Dynamically populated checkboxes -->
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="expense-notes-input">Notes (Optional)</label>
+
+          <input type="text" id="expense-notes-input" placeholder="e.g. Paid via UPI" autocomplete="off">
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-text" data-close-modal="modal-expense">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-expense">Save Expense</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Edit Member -->
+  <div id="modal-edit-member" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>✏️ Edit Member Name</h2>
+        <button class="modal-close" data-close-modal="modal-edit-member">✕</button>
+      </div>
+      <form id="form-edit-member">
+        <input type="hidden" id="edit-member-id-hidden">
+        <div class="form-group">
+          <label for="edit-member-name-input">Member Name</label>
+          <input type="text" id="edit-member-name-input" required autocomplete="off">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-text" data-close-modal="modal-edit-member">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Rename Trip -->
+  <div id="modal-rename-trip" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>✏️ Rename Trip</h2>
+        <button class="modal-close" data-close-modal="modal-rename-trip">✕</button>
+      </div>
+      <form id="form-rename-trip">
+        <input type="hidden" id="rename-trip-id-hidden">
+        <div class="form-group">
+          <label for="rename-trip-name-input">New Trip Name</label>
+          <input type="text" id="rename-trip-name-input" required autocomplete="off">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-text" data-close-modal="modal-rename-trip">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Name</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 5: Confirmation Modal -->
+  <div id="modal-confirm" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="confirm-modal-title">Confirm Action</h2>
+        <button class="modal-close" data-close-modal="modal-confirm">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-modal-message">Are you sure you want to proceed?</p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-text" data-close-modal="modal-confirm">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirm-modal-action-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
-
-
 </html>
