@@ -319,12 +319,13 @@ function createTripCardElement(trip) {
         <span>📅 ${formatDate(trip.createdAt)}</span>
       </div>
     </div>
-    <div class="trip-card-actions">
-      <button class="btn btn-primary btn-sm" onclick="openTripDashboard('${trip.id}')">📂 Open</button>
-      <button class="btn btn-outline btn-sm" onclick="promptRenameTrip('${trip.id}')">✏️ Rename</button>
-      <button class="btn btn-outline btn-sm" onclick="duplicateTrip('${trip.id}')">📋 Duplicate</button>
-      <button class="btn btn-outline btn-sm text-danger" onclick="promptDeleteTrip('${trip.id}')">🗑️ Delete</button>
-    </div>
+  <div class="trip-card-actions">
+  <button class="btn btn-primary btn-sm" onclick="openTripDashboard('${trip.id}')">📂 Open</button>
+  <button class="btn btn-outline btn-sm" onclick="promptRenameTrip('${trip.id}')">✏️ Rename</button>
+  <button class="btn btn-outline btn-sm" onclick="duplicateTrip('${trip.id}')">📋 Duplicate</button>
+  <button class="btn btn-outline btn-sm" onclick="exportTripPDF('${trip.id}')">📄 PDF</button>
+  <button class="btn btn-outline btn-sm text-danger" onclick="promptDeleteTrip('${trip.id}')">🗑️ Delete</button>
+</div>
   `;
   return card;
 }
