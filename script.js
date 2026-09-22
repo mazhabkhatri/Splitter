@@ -1109,7 +1109,7 @@ function toggleSettlementStatus(settlementId, isChecked) {
 // TRIP PDF STATEMENT EXPORT
 // ==================================================
 
-function exportTripPDF(tripId) {
+async function exportTripPDF(tripId) {
   const trip = state.trips.find(t => t.id === tripId);
 
   if (!trip) {
@@ -1117,8 +1117,48 @@ function exportTripPDF(tripId) {
     return;
   }
 
-  if (!window.jspdf || !window.jspdf.jsPDF) {
-    showToast('⚠️ PDF library could not be loaded');
+  // jsPDF can be provided by the primary CDN in index.html. If that network is
+  // unavailable, load the same pinned libraries from a second CDN before failing.
+  const loadScript = (src) => new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-splitter-pdf-src="' + src + '"]');
+    if (existing) {
+      existing.addEventListener('load', resolve, { once: true });
+      existing.addEventListener('error', reject, { once: true });
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = src;
+    script.async = false;
+    script.dataset.splitterPdfSrc = src;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+
+  const ensurePdfLibraries = async () => {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      try {
+        await loadScript('https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js');
+      } catch (e) {}
+    }
+
+    if (!window.jspdf || !window.jspdf.jsPDF) return false;
+
+    // AutoTable attaches itself to jsPDF. If it is missing, load the pinned
+    // plugin from the fallback CDN.
+    const probe = new window.jspdf.jsPDF();
+    if (typeof probe.autoTable !== 'function') {
+      try {
+        await loadScript('https://unpkg.com/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js');
+      } catch (e) {}
+    }
+
+    return typeof window.jspdf.jsPDF === 'function' &&
+      typeof window.jspdf.jsPDF.prototype.autoTable === 'function';
+  };
+
+  if (!(await ensurePdfLibraries())) {
+    showToast('⚠️ PDF library could not be loaded. Check your internet connection and try again.');
     return;
   }
 
