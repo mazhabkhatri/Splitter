@@ -1105,6 +1105,572 @@ function toggleSettlementStatus(settlementId, isChecked) {
 }
 
 // ==================================================
+// TRIP PDF STATEMENT EXPORT
+// ==================================================
+
+function exportTripPDF(tripId) {
+  const trip = state.trips.find(t => t.id === tripId);
+
+  if (!trip) {
+    showToast('⚠️ Trip not found');
+    return;
+  }
+
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    showToast('⚠️ PDF library could not be loaded');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+
+  const curr = trip.currency || state.settings.currency;
+  const expenses = Array.isArray(trip.expenses) ? [...trip.expenses] : [];
+  const members = Array.isArray(trip.members) ? trip.members : [];
+
+  // --------------------------------------------------
+  // HELPERS
+  // --------------------------------------------------
+
+  const money = (amount) => {
+    return `${curr}${Number(amount || 0).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })}`;
+  };
+
+  const memberName = (memberId) => {
+    const member = members.find(m => m.id === memberId);
+    return member ? member.name : 'Unknown';
+  };
+
+  const getExpenseDate = (expense) => {
+    if (expense.createdAt) {
+      const d = new Date(expense.createdAt);
+
+      if (!isNaN(d.getTime())) {
+        return d.toLocaleString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+    }
+
+    if (expense.date) {
+      return formatDate(expense.date);
+    }
+
+    return 'Unknown date';
+  };
+
+  const addPageNumber = () => {
+    const pageCount = doc.internal.getNumberOfPages();
+
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+
+      doc.setFontSize(8);
+      doc.setTextColor(120, 120, 120);
+
+      doc.text(
+        `Splitter • ${trip.name}`,
+        14,
+        287
+      );
+
+      doc.text(
+        `Page ${i} of ${pageCount}`,
+        196,
+        287,
+        { align: 'right' }
+      );
+    }
+  };
+
+  // --------------------------------------------------
+  // SORT TRANSACTIONS
+  // --------------------------------------------------
+
+  expenses.sort((a, b) => {
+    const dateA = new Date(a.createdAt || a.date || 0);
+    const dateB = new Date(b.createdAt || b.date || 0);
+
+    return dateA - dateB;
+  });
+
+  // --------------------------------------------------
+  // CALCULATIONS
+  // --------------------------------------------------
+
+  const summary = calculateTripSummary(trip);
+  const settlements = computeSettlements(trip);
+
+  const totalExpense = summary.totalExpense;
+
+  const averageExpense =
+    expenses.length > 0
+      ? totalExpense / expenses.length
+      : 0;
+
+  let largestExpense = null;
+
+  expenses.forEach(exp => {
+    if (
+      !largestExpense ||
+      parseFloat(exp.amount || 0) >
+        parseFloat(largestExpense.amount || 0)
+    ) {
+      largestExpense = exp;
+    }
+  });
+
+  // --------------------------------------------------
+  // TITLE / HEADER
+  // --------------------------------------------------
+
+  doc.setFontSize(22);
+  doc.setTextColor(27, 94, 32);
+  doc.setFont(undefined, 'bold');
+  doc.text('SPLITTER', 14, 18);
+
+  doc.setFontSize(16);
+  doc.setTextColor(40, 40, 40);
+  doc.text('Complete Trip Statement', 14, 28);
+
+  doc.setFontSize(12);
+  doc.setFont(undefined, 'bold');
+  doc.text(trip.name, 14, 37);
+
+  doc.setFontSize(9);
+  doc.setFont(undefined, 'normal');
+  doc.setTextColor(100, 100, 100);
+
+  doc.text(
+    `Generated: ${new Date().toLocaleString()}`,
+    14,
+    44
+  );
+
+  // --------------------------------------------------
+  // TRIP OVERVIEW
+  // --------------------------------------------------
+
+  doc.setFontSize(13);
+  doc.setTextColor(27, 94, 32);
+  doc.setFont(undefined, 'bold');
+  doc.text('Trip Overview', 14, 55);
+
+  doc.autoTable({
+    startY: 59,
+    theme: 'grid',
+
+    head: [
+      ['Detail', 'Value']
+    ],
+
+    body: [
+      ['Trip Name', trip.name],
+      ['Created', formatDate(trip.createdAt)],
+      ['Status', trip.completed ? 'Completed' : 'Active'],
+      ['Members', String(members.length)],
+      ['Transactions', String(expenses.length)],
+      ['Total Spending', money(totalExpense)],
+      ['Average Transaction', money(averageExpense)],
+      [
+        'Largest Expense',
+        largestExpense
+          ? `${largestExpense.title} (${money(largestExpense.amount)})`
+          : 'None'
+      ],
+      [
+        'Settlement Status',
+        settlements.length === 0
+          ? 'Fully Settled'
+          : `${settlements.filter(
+              s => trip.settlementStatus &&
+                   trip.settlementStatus[s.id]
+            ).length} of ${settlements.length} completed`
+      ]
+    ],
+
+    styles: {
+      fontSize: 9,
+      cellPadding: 3
+    },
+
+    headStyles: {
+      fillColor: [27, 94, 32]
+    }
+  });
+
+  // --------------------------------------------------
+  // MEMBER SUMMARY
+  // --------------------------------------------------
+
+  let y = doc.lastAutoTable.finalY + 10;
+
+  doc.setFontSize(13);
+  doc.setTextColor(27, 94, 32);
+  doc.setFont(undefined, 'bold');
+  doc.text('Person-wise Financial Summary', 14, y);
+
+  const memberRows = members.map(member => {
+    const paid = summary.paidMap[member.id] || 0;
+    const share = summary.shareMap[member.id] || 0;
+    const net = summary.netBalances[member.id] || 0;
+
+    let status = 'Settled';
+
+    if (net > 0.01) {
+      status = `Gets ${money(net)}`;
+    } else if (net < -0.01) {
+      status = `Pays ${money(Math.abs(net))}`;
+    }
+
+    return [
+      member.name,
+      money(paid),
+      money(share),
+      money(net),
+      status
+    ];
+  });
+
+  doc.autoTable({
+    startY: y + 4,
+
+    head: [
+      ['Person', 'Paid', 'Share', 'Net Balance', 'Final Status']
+    ],
+
+    body: memberRows,
+
+    theme: 'grid',
+
+    styles: {
+      fontSize: 8.5,
+      cellPadding: 3
+    },
+
+    headStyles: {
+      fillColor: [27, 94, 32]
+    }
+  });
+
+  // --------------------------------------------------
+  // COMPLETE TIME-WISE TRANSACTION STATEMENT
+  // --------------------------------------------------
+
+  y = doc.lastAutoTable.finalY + 10;
+
+  doc.setFontSize(13);
+  doc.setTextColor(27, 94, 32);
+  doc.setFont(undefined, 'bold');
+  doc.text('Complete Transaction Statement', 14, y);
+
+  const transactionRows = [];
+
+  expenses.forEach((exp, index) => {
+    const amount = parseFloat(exp.amount || 0);
+
+    const paidBy = memberName(exp.paidBy);
+
+    const splitMembers = (exp.splitBetween || [])
+      .map(id => memberName(id));
+
+    const perPersonShare =
+      splitMembers.length > 0
+        ? amount / splitMembers.length
+        : 0;
+
+    transactionRows.push([
+      String(index + 1),
+      getExpenseDate(exp),
+      exp.title || 'Untitled',
+      money(amount),
+      paidBy,
+      splitMembers.join(', '),
+      money(perPersonShare),
+      exp.notes || '-'
+    ]);
+  });
+
+  if (transactionRows.length === 0) {
+    transactionRows.push([
+      '-',
+      '-',
+      'No expenses recorded',
+      money(0),
+      '-',
+      '-',
+      '-',
+      '-'
+    ]);
+  }
+
+  doc.autoTable({
+    startY: y + 4,
+
+    head: [
+      [
+        '#',
+        'Date / Time',
+        'Expense',
+        'Amount',
+        'Paid By',
+        'Split Between',
+        'Each Share',
+        'Notes'
+      ]
+    ],
+
+    body: transactionRows,
+
+    theme: 'grid',
+
+    styles: {
+      fontSize: 7,
+      cellPadding: 2,
+      overflow: 'linebreak',
+      valign: 'middle'
+    },
+
+    headStyles: {
+      fillColor: [27, 94, 32],
+      fontSize: 7
+    },
+
+    columnStyles: {
+      0: { cellWidth: 7 },
+      1: { cellWidth: 24 },
+      2: { cellWidth: 25 },
+      3: { cellWidth: 20 },
+      4: { cellWidth: 20 },
+      5: { cellWidth: 30 },
+      6: { cellWidth: 20 },
+      7: { cellWidth: 30 }
+    }
+  });
+
+  // --------------------------------------------------
+  // DETAILED PERSON-WISE BREAKDOWN
+  // --------------------------------------------------
+
+  y = doc.lastAutoTable.finalY + 10;
+
+  doc.setFontSize(13);
+  doc.setTextColor(27, 94, 32);
+  doc.setFont(undefined, 'bold');
+  doc.text('Detailed Person-wise Breakdown', 14, y);
+
+  members.forEach(member => {
+    const paid = summary.paidMap[member.id] || 0;
+    const share = summary.shareMap[member.id] || 0;
+    const net = summary.netBalances[member.id] || 0;
+
+    const paidExpenses = expenses.filter(
+      e => e.paidBy === member.id
+    );
+
+    const participatedExpenses = expenses.filter(
+      e => (e.splitBetween || []).includes(member.id)
+    );
+
+    let status = 'Settled';
+
+    if (net > 0.01) {
+      status = `Receives ${money(net)}`;
+    } else if (net < -0.01) {
+      status = `Pays ${money(Math.abs(net))}`;
+    }
+
+    const personRows = [
+      ['Total Paid', money(paid)],
+      ['Total Share / Owed', money(share)],
+      ['Net Balance', money(net)],
+      ['Expenses Paid', String(paidExpenses.length)],
+      ['Expenses Participated In', String(participatedExpenses.length)],
+      ['Final Status', status]
+    ];
+
+    doc.setFontSize(10);
+    doc.setTextColor(50, 50, 50);
+    doc.setFont(undefined, 'bold');
+
+    doc.text(
+      member.name,
+      14,
+      y + 7
+    );
+
+    doc.autoTable({
+      startY: y + 10,
+
+      head: [
+        ['Metric', 'Value']
+      ],
+
+      body: personRows,
+
+      theme: 'grid',
+
+      styles: {
+        fontSize: 8,
+        cellPadding: 2.5
+      },
+
+      headStyles: {
+        fillColor: [27, 94, 32]
+      }
+    });
+
+    y = doc.lastAutoTable.finalY + 7;
+  });
+
+  // --------------------------------------------------
+  // SETTLEMENT STATEMENT
+  // --------------------------------------------------
+
+  y = doc.lastAutoTable.finalY + 8;
+
+  doc.setFontSize(13);
+  doc.setTextColor(27, 94, 32);
+  doc.setFont(undefined, 'bold');
+  doc.text('Settlement Statement', 14, y);
+
+  const settlementRows = settlements.map(st => {
+    const fromName = memberName(st.fromId);
+    const toName = memberName(st.toId);
+
+    const completed =
+      trip.settlementStatus &&
+      trip.settlementStatus[st.id];
+
+    return [
+      fromName,
+      toName,
+      money(st.amount),
+      completed ? 'Completed' : 'Pending'
+    ];
+  });
+
+  if (settlementRows.length === 0) {
+    settlementRows.push([
+      '-',
+      '-',
+      money(0),
+      'No settlement required'
+    ]);
+  }
+
+  doc.autoTable({
+    startY: y + 4,
+
+    head: [
+      ['Pays', 'Receives', 'Amount', 'Status']
+    ],
+
+    body: settlementRows,
+
+    theme: 'grid',
+
+    styles: {
+      fontSize: 8.5,
+      cellPadding: 3
+    },
+
+    headStyles: {
+      fillColor: [27, 94, 32]
+    }
+  });
+
+  // --------------------------------------------------
+  // FINAL SUMMARY
+  // --------------------------------------------------
+
+  y = doc.lastAutoTable.finalY + 10;
+
+  doc.setFontSize(13);
+  doc.setTextColor(27, 94, 32);
+  doc.setFont(undefined, 'bold');
+  doc.text('Final Trip Summary', 14, y);
+
+  const completedSettlements = settlements.filter(
+    s =>
+      trip.settlementStatus &&
+      trip.settlementStatus[s.id]
+  ).length;
+
+  doc.autoTable({
+    startY: y + 4,
+
+    head: [
+      ['Summary', 'Value']
+    ],
+
+    body: [
+      ['Total Members', String(members.length)],
+      ['Total Expenses', String(expenses.length)],
+      ['Total Spending', money(totalExpense)],
+      ['Average Expense', money(averageExpense)],
+      [
+        'Largest Expense',
+        largestExpense
+          ? `${largestExpense.title} — ${money(largestExpense.amount)}`
+          : 'None'
+      ],
+      [
+        'Settlement Transactions',
+        String(settlements.length)
+      ],
+      [
+        'Completed Settlements',
+        `${completedSettlements} / ${settlements.length}`
+      ],
+      [
+        'Trip Status',
+        trip.completed ? 'Completed' : 'Active'
+      ]
+    ],
+
+    theme: 'grid',
+
+    styles: {
+      fontSize: 9,
+      cellPadding: 3
+    },
+
+    headStyles: {
+      fillColor: [27, 94, 32]
+    }
+  });
+
+  // --------------------------------------------------
+  // FOOTER / PAGE NUMBERS
+  // --------------------------------------------------
+
+  addPageNumber();
+
+  // --------------------------------------------------
+  // DOWNLOAD
+  // --------------------------------------------------
+
+  const safeTripName = trip.name
+    .replace(/[^a-z0-9]/gi, '_')
+    .replace(/_+/g, '_')
+    .substring(0, 60);
+
+  doc.save(
+    `Splitter_${safeTripName}_Statement.pdf`
+  );
+
+  showToast('📄 Trip statement PDF exported!');
+}
+
+// ==================================================
 // SETTINGS & BACKUP HANDLERS
 // ==================================================
 function applySettings() {
