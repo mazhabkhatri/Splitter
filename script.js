@@ -963,15 +963,16 @@ function handleSaveExpense(e) {
     }
   } else {
     // Add new
-    const newExpense = {
-      id: `exp_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
-      title,
-      amount,
-      paidBy,
-      splitBetween: selectedSplit,
-      date: new Date().toISOString().split('T')[0],
-      notes
-    };
+const newExpense = {
+  id: `exp_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+  title,
+  amount,
+  paidBy,
+  splitBetween: selectedSplit,
+  date: new Date().toISOString().split('T')[0],
+  createdAt: new Date().toISOString(),
+  notes
+};
     if (!trip.expenses) trip.expenses = [];
     trip.expenses.push(newExpense);
     showToast('Expense added');
